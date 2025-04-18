@@ -1,0 +1,57 @@
+Token – istifadəçinin identifikasiyasını (kimliyini) təhlükəsiz şəkildə serverə ötürmək üçün istifadə olunan rəqəmsal açardır.
+Əsas Token Növləri:
+1. Access Token (Giriş Tokeni)
+Qısa müddətlik istifadə olunur (məs: 15 dəq).
+
+İstifadəçi hər API istəyində bu tokeni göndərir.
+
+İçində istifadəçinin kimliyi, rolu və bəlkə bəzi hüquqları yazılır (adətən JWT formatında olur).
+
+Bearer Token kimi başlıqda göndərilir:
+Authorization: Bearer <access_token>
+ Nə vaxt istifadə olunur?
+
+Hər request-də istifadəçini yoxlamaq üçün.
+
+Məsələn: profil məlumatını gətirmək, post əlavə etmək, və s.
+ Refresh Token
+Daha uzunmüddətli olur (məs: 7 gün, 30 gün).
+
+Sadece access token bitəndə istifadə olunur.
+
+Serverə refresh token göndərilir və qarşılığında yeni access token verilir.
+
+Refresh token çox vaxt cookie-də saxlanılır (secure, httpOnly).
+
+Nə vaxt istifadə olunur?
+
+İstifadəçi hal-hazırda sistemdədir, amma access token artıq keçib.
+
+Onu təkrar login etmədən yenidən access token almaq üçün.
+JWT Token Strukturu:
+<HEADER>.<PAYLOAD>.<SIGNATURE>
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+eyJ1c2VySWQiOjEsIm5hbWUiOiJNaW5heWEiLCJyb2xlIjoiYWRtaW4ifQ.
+SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+Header: Alqoritm və token növü
+
+Payload: İstifadəçi məlumatları
+
+Signature: Güvənlik imzası (secret ilə imzalanır)
+Saxlama	Risk	Tövsiyə
+localStorage	XSS hücumlarına açıq	Access token üçün ola bilər, amma ehtiyatlı
+cookie (httpOnly)	Daha təhlükəsiz	Refresh token üçün ideal
+ Real Ssenari (JWT ilə login sistemi)
+İstifadəçi POST /login edir → access token və refresh token alır.
+
+Access token 15 dəq istifadə olunur → hər request-də server yoxlayır.
+
+Token müddəti bitdikdə → POST /refreshToken edilərək yenidən token alınır.
+
+Refresh token bitibsə → istifadəçidən təkrar login tələb olunur.
+
+Mərhələ	Token	Məqsəd
+Login	access, refresh	İstifadəçiyə icazə vermək
+API istəkləri	access token	Giriş üçün istifadə olunur
+Access token bitdi	refresh token	Yeni access token almaq
+Logout	refresh token silinir	İstifadəçi çıxış edir
