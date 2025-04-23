@@ -1,0 +1,227 @@
+Bu konsepsiya JavaScript-də obyekt və massivləri dəyişənlərə ayırmaq (parçalamaq) üçün istifadə olunur.
+ Destructuring Assignment nədir?
+Destructuring assignment – 
+massiv və obyektlərdən gərəkli hissələri çıxarıb dəyişənlərə təyin etməyə imkan verən xüsusi bir yazılış üsuludur.
+Ən çox funksiya daxilində müəyyən parametrləri götürmək, ya da massivdən və obyektlərdən data almaq üçün istifadə olunur.
+
+
+
+
+------------------------------------------------------------Arraylerde-------------------------------------------------------------------
+
+
+let arr = ["John", "Smith"];
+let [firstName, surname] = arr;
+console.log(firstName); // "John"
+console.log(surname);   // "Smith"
+
+
+split ilə birgə istifadə:
+let [firstName, surname] = "John Smith".split(' ');
+console.log(firstName); // "John"
+console.log(surname);   // "Smith"
+
+ Bəzi elementləri atlamaq (ignore):
+let [firstName, , title] = ["Julius", "Caesar", "Consul"];
+console.log(title); // "Consul"
+İkinci elementi ("Caesar") istəmədiyimiz üçün vergüllə atlayırıq.
+
+Object Destructuring (Obyekt Parçalanması)
+let user = { name: "John", age: 30 };
+let { name, age } = user;
+console.log(name); // "John"
+console.log(age);  // 30
+
+Yeni adlarla dəyişənlər:
+let { name: userName, age: userAge } = user;
+console.log(userName); // "John"
+
+
+Dəyişənləri dəyişmək (Swap etmək)
+let guest = "Jane";
+let admin = "Pete";
+[guest, admin] = [admin, guest];
+console.log(guest); // "Pete"
+console.log(admin); // "Jane"
+Bu üsulla aralıq dəyişən yaratmadan iki dəyişənin dəyərini asanlıqla dəyişmək olur.
+
+
+Object.entries ilə dövr + destructuring:
+let user = { name: "John", age: 30 };
+
+for (let [key, value] of Object.entries(user)) {
+  console.log(`${key}: ${value}`);
+}
+// Çıxış:
+// name: John
+// age: 30
+Object.entries() obyektin [açar, dəyər] cütlüyü şəklində massiv verir. for...of dövrü və destructuring ilə birlikdə istifadəsi çox rahatdır.
+
+
+Destructuring orijinal massiv və ya obyektə toxunmur – sadəcə ondan dəyişənlərə dəyəri “kopiyalayır”.
+Bu üsul qısa və oxunaqlı kod yazmaq üçün çox faydalıdır.
+
+
+ İstənilən iterasiya edilə bilənlə işləyir:
+let [a, b, c] = "abc";         // hərf-hərf ayırır
+let [x, y, z] = new Set([1, 2, 3]); // Set-də də işləyir
+
+
+
+Obyektin içində dəyişənə təyin:
+js
+Copy
+Edit
+let user = {};
+[user.name, user.surname] = "John Smith".split(" ");
+
+console.log(user.name); // "John"
+console.log(user.surname); // "Smith"
+🧾 3. Object Destructuring (Obyekt Destrukturizasiyası)
+js
+Copy
+Edit
+let user = {
+  name: "John",
+  age: 30
+};
+
+let { name, age } = user;
+
+
+ Default dəyərlər:
+let { name, country = "Unknown" } = user;
+console.log(country); // "Unknown"
+
+
+
+
+Map üçün daha sadə:
+let map = new Map();
+map.set("name", "John");
+map.set("age", "30");
+
+for (let [key, value] of map) {
+  console.log(`${key}: ${value}`);
+}
+ 6. Funksiya Parametrlərində Destructuring
+
+function showUser({ name, age }) {
+  console.log(name, age);
+}
+
+let user = { name: "Ali", age: 25 };
+showUser(user);
+
+
+
+
+------------------------------------------------------------Objectlerde-------------------------------------------------------------------
+Object Destructuring nədir?
+Object destructuring – obyektin daxilindəki sahələri (property) dəyişənlərə qısa yolla təyin etməyə imkan verir. Yəni obyektin daxilindən lazım olan sahələri çıxarıb birbaşa dəyişən kimi istifadə edə bilirik.
+Əsas sintaksis:
+let {var1, var2} = {var1:…, var2:…}
+
+
+
+ Sadə nümunə:
+let options = {
+  title: "Menu",
+  width: 100,
+  height: 200
+};
+
+let {title, width, height} = options;
+
+console.log(title);  // "Menu"
+console.log(width);  // 100
+console.log(height); // 200
+
+
+Sıra önəmli deyil
+let {height, width, title} = {
+  title: "Menu",
+  height: 200,
+  width: 100
+};
+Sıra dəyişsə də, dəyişənlər obyektin adlarına uyğun olaraq təyin edilir.
+
+Ad dəyişmək (aliasing)
+Əgər obyektin sahəsini fərqli adlı dəyişənə təyin etmək istəyiriksə, : işarəsindən istifadə edirik:
+
+let options = {
+  title: "Menu",
+  width: 100,
+  height: 200
+};
+
+let {width: w, height: h, title} = options;
+
+console.log(w);      // 100
+console.log(h);      // 200
+console.log(title);  // "Menu"
+width -> w
+height -> h
+title isə olduğu kimi qalır.
+
+
+
+
+🧱 Default dəyərlər
+Əgər obyektin daxilində bəzi sahələr yoxdursa və biz onların dəyərlərini təyin etmək istəyiriksə:
+let options = {
+  title: "Menu"
+};
+
+let {width = 100, height = 200, title} = options;
+
+console.log(width);  // 100
+console.log(height); // 200
+console.log(title);  // "Menu"
+Obyektdə width və height olmadığı üçün default (susmaya görə) dəyərlər istifadə olundu.
+
+
+
+Funksiya ilə default dəyər
+let options = {
+  title: "Menu"
+};
+
+let {width = prompt("width?"), title = prompt("title?")} = options;
+
+console.log(width);  // prompt cavabı
+console.log(title);  // "Menu"
+Əgər width təyin olunmayıbsa, prompt vasitəsilə istifadəçidən soruşulur.
+
+
+🧪 Həm : həm = istifadə:
+let options = {
+  title: "Menu"
+};
+
+let {width: w = 100, height: h = 200, title} = options;
+
+console.log(w);      // 100
+console.log(h);      // 200
+console.log(title);  // "Menu"
+Burada width sahəsi w dəyişəninə 100 dəyəri ilə verilib.
+
+🧹 Yalnız lazım olan sahəni çıxarmaq:
+let options = {
+  title: "Menu",
+  width: 100,
+  height: 200
+};
+
+let { title } = options;
+
+console.log(title); // "Menu"
+Yalnız title sahəsi dəyişən kimi götürülür, qalanları atılır.
+
+
+Yazılış | Mənası
+{a, b} = obj | obj.a → a, obj.b → b
+{a: x, b: y} | obj.a → x, obj.b → y
+{a = 5} | obj.a yoxdursa, a = 5
+{a: x = 5} | obj.a yoxdursa, x = 5
+let { onlyOne } = obj; | Yalnız obj.onlyOne sahəsini götürür
